@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vinnuferð vinnuflokksins 2025</title>
+    <title>Vinnuferð Countdown</title>
     <style>
         body {
             margin: 0;
@@ -63,6 +63,21 @@
             font-size: 1.2em;
             margin-bottom: 10px;
         }
+        /* Media Queries for Responsive Design */
+        @media (max-width: 768px) {
+            .title {
+                font-size: 1.2em;
+            }
+            .countdown-text {
+                font-size: 1.5em;  /* Reduce font size on smaller screens */
+            }
+            .box {
+                padding: 15px 20px;  /* Slightly reduce padding */
+            }
+            .container {
+                width: 90%;  /* Increase container width for small screens */
+            }
+        }
     </style>
 </head>
 <body>
@@ -77,61 +92,62 @@
         <!-- Weather Box -->
         <div class="box">
             <div class="title">Veðurspá næstu daga:</div>
-            <div>☀️❄️Gott veður framundan❄️☀️ <span class="emoji"☀️❄️</span></div>
+            <div>☀️❄️Gott veður framundan❄️☀️<span class="emoji"☀️❄️</span></div>
         </div>
 
         <!-- Accommodation Box -->
         <div class="box">
-            <div class="title">Gist hjá fjölskyldunni í Les Houches</div>
-            <div>Innifalið:</div>
+            <div class="title">Upplýsingar um gistingu:</div>
+            <div>Gist hjá fjölskyldunni í Les Houches</div>
+            <div>innifalið:</div>
             <ul>
                 <li>Deluxe herbergi 🛏️</li>
-                <li>Free airport shuttle 🚐</li>
+                <li>Free airport shuttle 🚖</li>
                 <li>Ein heit sturta á mann á dag 🚿</li>
                 <li>Ráðleggingar um skíðapassa 🎿</li>
-                <li>Ótakmörkuð notkun á The Ski Sauna ♨️ </li>
+                <li>Unlimited Ski Sauna♨️</li>
             </ul>
         </div>
 
         <!-- Flight Info Box -->
         <div class="box">
             <div class="title">Flugupplýsingar:</div>
-            <div>Flug OG 764:  
-                <br>Frá: Reykjavík (KEF) ✈️ til Genève (GVA) 🌍
-                <br>Brottför: 8. febrúar 2025, kl. 09:00 ⏰
-                <br>Koma: 8. febrúar 2025, kl. 12:30 ⏰
-            </div>
+            <div>Flug OG 764</div>
+            <div>Frá Reykjavík (KEF) til Geneva (GVA)</div>
+            <div>Brottför: 10:05 🕗 | Koma: 16:00 🕧</div>
         </div>
 
-        <!-- Links Box -->
+        <!-- Useful Links Box -->
         <div class="box links-box">
             <div class="title">Hagnýtar upplýsingar:</div>
             <a href="https://www.annapurna2grill.com/" target="_blank">Annapurna Restaurant 🍽️</a>
-            <a href="https://www.montblancnaturalresort.com/en/ticketing" target="_blank">Skíðapassar 🎟️</a>
-            <a href="https://en.chamonix.com/weather" target="_blank">Veður ☀️🌨️</a>
+            <a href="https://www.montblancnaturalresort.com/en/ticketing" target="_blank">Skíðapassar 🎿</a>
+            <a href="https://en.chamonix.com/weather" target="_blank">Veður ☁️</a>
         </div>
     </div>
 
     <script>
-        // Countdown Timer
-        function updateCountdown() {
-            const eventDate = new Date('February 8, 2025 00:00:00').getTime();
-            const currentDate = new Date().getTime();
-            const distance = eventDate - currentDate;
+        // Countdown Timer Script
+        const countdownDate = new Date("Feb 8, 2025 00:00:00").getTime();
+        const countdown = document.getElementById("countdown");
+
+        setInterval(function() {
+            const now = new Date().getTime();
+            const distance = countdownDate - now;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            countdown.innerHTML = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
 
             if (distance < 0) {
-                document.getElementById("countdown").innerHTML = "Vinnuferð hefst!";
-            } else {
-                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-                document.getElementById("countdown").innerHTML = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+                clearInterval(x);
+                countdown.innerHTML = "Vinnuferð hefst nú!";
             }
-        }
-
-        setInterval(updateCountdown, 1000);
+        }, 1000);
     </script>
+
 </body>
 </html>
