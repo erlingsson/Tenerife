@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Countdown Timer with Weather Forecast</title>
+    <title>Vinnuferð Countdown</title>
     <style>
         body {
             margin: 0;
@@ -12,10 +12,11 @@
             background-image: url('https://img.goodfon.com/original/1920x1200/b/38/gornye-lyzhi-lyzhnik-sneg-gory.jpg');
             background-size: cover;
             background-position: center;
+            color: white;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            color: white;
         }
         .container {
             display: flex;
@@ -42,27 +43,8 @@
             font-size: 2em;
             margin-bottom: 20px;
         }
-        .compact-info p {
-            margin: 3px 0;
-            font-size: 1.2em; /* Consistent text size */
-        }
         .emoji {
             font-size: 1.5em;
-        }
-        .weather-item {
-            font-size: 1.1em;
-            margin-bottom: 10px;
-        }
-        .weather-icon {
-            font-size: 1.5em;
-        }
-        .links-box {
-            background: rgba(0, 0, 0, 0.7);
-            padding: 20px;
-            margin-top: 20px;
-            width: 100%;
-            text-align: center;
-            border-radius: 10px;
         }
         .links-box a {
             color: #00c3ff;
@@ -72,6 +54,14 @@
         }
         .links-box a:hover {
             text-decoration: underline;
+        }
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        li {
+            font-size: 1.2em;
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -84,101 +74,64 @@
             <div class="countdown-text" id="countdown"></div>
         </div>
 
-        <!-- Accommodation Info Box -->
+        <!-- Weather Box -->
+        <div class="box">
+            <div class="title">Veðurspá næstu daga:</div>
+            <div>☀️❄️Gott veður framundan❄️☀️ <span class="emoji"☀️❄️</span></div>
+        </div>
+
+        <!-- Accommodation Box -->
         <div class="box">
             <div class="title">Gist hjá fjölskyldunni í Les Houches</div>
-            <div class="compact-info">
-                <p><span class="emoji">🏠</span> Deluxe herbergi</p>
-                <p><span class="emoji">🚐</span> Free airport shuttle</p>
-                <p><span class="emoji">🛁</span> One hot shower per person</p>
-                <p><span class="emoji"♨️</span> Unlimited ski sauna</p>
-                <p><span class="emoji">🎿</span> Assistance with ski pass & rentals</p>
-            </div>
+            <div>Innifalið:</div>
+            <ul>
+                <li>Deluxe herbergi 🛏️</li>
+                <li>Free airport shuttle 🚐</li>
+                <li>Ein heit sturta á mann á dag 🚿</li>
+                <li>Ráðleggingar um skíðapassa 🎿</li>
+                <li>Ótakmörkuð notkun á The Ski Sauna ♨️ </li>
+            </ul>
         </div>
 
-        <!-- Weather Forecast Box -->
+        <!-- Flight Info Box -->
         <div class="box">
-            <div class="title">Veðurspá Chamonix næstu daga</div>
-            <div id="weather"></div>
+            <div class="title">Flugupplýsingar:</div>
+            <div>Flug OG 764:  
+                <br>Frá: Reykjavík (KEF) ✈️ til Genève (GVA) 🌍
+                <br>Brottför: 8. febrúar 2025, kl. 09:00 ⏰
+                <br>Koma: 8. febrúar 2025, kl. 12:30 ⏰
+            </div>
         </div>
 
-        <!-- Useful Links Box -->
-        <div class="links-box">
-            <div class="title">Góðar upplýsingar</div>
-            <div>
-                <a href="https://www.annapurna2grill.com/" target="_blank"><span class="emoji">🍽️</span> Annapurna Restaurant</a>
-                <a href="https://www.montblancnaturalresort.com/en/ticketing" target="_blank"><span class="emoji">🎫</span> Skíðapassar</a>
-                <a href="https://en.chamonix.com/weather" target="_blank"><span class="emoji">🌤️</span> Veður</a>
-            </div>
+        <!-- Links Box -->
+        <div class="box links-box">
+            <div class="title">Hagnýtar upplýsingar:</div>
+            <a href="https://www.annapurna2grill.com/" target="_blank">Annapurna Restaurant 🍽️</a>
+            <a href="https://www.montblancnaturalresort.com/en/ticketing" target="_blank">Skíðapassar 🎟️</a>
+            <a href="https://en.chamonix.com/weather" target="_blank">Veður ☀️🌨️</a>
         </div>
     </div>
 
     <script>
-        // Countdown Timer Code
-        const countdownDate = new Date("February 8, 2025 00:00:00").getTime();
-        const countdownElement = document.getElementById("countdown");
+        // Countdown Timer
+        function updateCountdown() {
+            const eventDate = new Date('February 8, 2025 00:00:00').getTime();
+            const currentDate = new Date().getTime();
+            const distance = eventDate - currentDate;
 
-        const interval = setInterval(() => {
-            const now = new Date().getTime();
-            const distance = countdownDate - now;
-
-            if (distance <= 0) {
-                clearInterval(interval);
-                countdownElement.innerHTML = "Vinnuferð hefst!";
+            if (distance < 0) {
+                document.getElementById("countdown").innerHTML = "Vinnuferð hefst!";
             } else {
                 const days = Math.floor(distance / (1000 * 60 * 60 * 24));
                 const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                 const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-                countdownElement.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
-            }
-        }, 1000);
-
-        // Fetch Weather Data and Display
-        async function fetchWeather() {
-            try {
-                const response = await fetch('https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=45.9237&lon=6.8694', {
-                    headers: {
-                        'User-Agent': 'your-app-name'  // Replace 'your-app-name' with the app name you registered.
-                    }
-                });
-                const data = await response.json();
-
-                const weatherElement = document.getElementById('weather');
-                weatherElement.innerHTML = '';
-                const forecast = data.properties.timeseries;
-
-                for (let i = 0; i < 7; i++) {
-                    const day = new Date(forecast[i].time);
-                    const dayOfWeek = day.toLocaleString('en-us', { weekday: 'short' });
-                    const date = day.toLocaleString('en-us', { day: 'numeric', month: 'short' });
-
-                    const temperature = forecast[i].data.instant.details.air_temperature;
-                    const icon = forecast[i].data.next_12_hours.summary.symbol_code; // Getting weather icon symbol
-                    let emoji;
-
-                    // Determine emoji based on weather symbol
-                    if (icon.includes("clear")) emoji = "☀️";
-                    else if (icon.includes("cloud")) emoji = "☁️";
-                    else if (icon.includes("rain")) emoji = "🌧️";
-                    else if (icon.includes("snow")) emoji = "❄️";
-                    else emoji = "🌤️"; // Default
-
-                    weatherElement.innerHTML += `
-                        <div class="weather-item">
-                            <strong>${dayOfWeek} ${date}</strong> - ${temperature}°C ${emoji}
-                        </div>
-                    `;
-                }
-            } catch (error) {
-                console.error('Error fetching weather data:', error);
-                document.getElementById('weather').innerHTML = "Unable to retrieve weather data.";
+                document.getElementById("countdown").innerHTML = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
             }
         }
 
-        fetchWeather(); // Call the fetchWeather function to display weather data
+        setInterval(updateCountdown, 1000);
     </script>
-
 </body>
 </html>
