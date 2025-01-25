@@ -1,105 +1,144 @@
 <!DOCTYPE html>
-<html lang="is">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Les Houches, Chamonix</title>
+    <title>Countdown Timer with Weather Forecast</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-image: url('https://www.chamonix.net/sites/default/files/nodeimages/pierre-raphoz_-11_0.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
             margin: 0;
             padding: 0;
+            height: 100vh;
+            background-image: url('https://img.goodfon.com/original/1920x1200/b/38/gornye-lyzhi-lyzhnik-sneg-gory.jpg');
+            background-size: cover;
+            background-position: center;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            color: #ffffff;
+            color: white;
         }
-        .container {
-            text-align: center;
-            background-color: rgba(0, 0, 0, 0.6);
-            padding: 20px;
+        .countdown-box {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 20px 40px;
             border-radius: 10px;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            width: 80%;
+            max-width: 600px;
         }
-        h1, h2, h3 {
-            margin: 10px 0;
-        }
-        .countdown {
+        .title {
             font-size: 1.5em;
-            margin: 15px 0;
+            margin-bottom: 10px;
         }
-        .weather {
-            margin: 20px 0;
+        .countdown-text {
+            font-size: 2em;
+            margin-bottom: 20px;
         }
-        .info {
-            text-align: left;
-            margin-top: 20px;
+        .compact-info {
+            font-size: 1em;
+            margin-top: 10px;
         }
-        ul {
-            list-style: none;
-            padding: 0;
-        }
-        li {
-            margin: 10px 0;
+        .compact-info p {
+            margin: 3px 0;
         }
         .emoji {
-            margin-right: 10px;
+            font-size: 1.5em;
         }
-        .price {
-            font-weight: bold;
+        .weather-item {
+            font-size: 1.1em;
+            margin-bottom: 10px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Les Houches, Chamonix</h1>
-        <h2>Countdown to February 8</h2>
-        <div class="countdown" id="countdown">Loading...</div>
-        <div class="weather">
-            <h3>Weather in Chamonix</h3>
-            <iframe 
-                src="https://www.meteoblue.com/en/weather/widget/three/chamonix-mont-blanc_france_3027301" 
-                frameborder="0" 
-                scrolling="no" 
-                width="100%" 
-                height="200">
-            </iframe>
+
+    <div class="countdown-box">
+        <div class="title">Vinnuferð hefst eftir:</div>
+        <div class="countdown-text" id="countdown"></div>
+
+        <!-- Compact Flight Info -->
+        <div class="compact-info">
+            <p><span class="emoji"✈️</span> OG764: KEF → GVA</p>
+            <p><span class="emoji">⏱️</span> Flugtími: 3 klst 55 mín</p>
         </div>
-        <div class="info">
-            <h3>Gott að vita</h3>
-            <ul>
-                <li><span class="emoji">⚽</span>Miði á völlinn: <span class="price">37-39 €</span></li>
-                <li><span class="emoji">🍷</span>Rauðvín í matvöruverslun: <span class="price">5-8 €</span></li>
-                <li><span class="emoji">🍕</span>Pítsa á veitingastað: <span class="price">12-15 €</span></li>
-            </ul>
+
+        <!-- Compact Accommodation Info -->
+        <div class="compact-info">
+            <p><span class="emoji">🏠</span> Gist hjá fjölskyldunni í Les Houches</p>
+            <p><span class="emoji">🛏️</span> Deluxe herbergi</p>
+            <p><span class="emoji">🚐</span> Free airport shuttle</p>
         </div>
+
+        <!-- Weather Forecast -->
+        <div id="forecast-list" class="weather-forecast"></div>
     </div>
 
     <script>
-        // Countdown script
+        // Countdown Timer
         function updateCountdown() {
-            const eventDate = new Date("2025-02-08T00:00:00");
+            const targetDate = new Date('2025-02-08T00:00:00'); // Date for the countdown
             const now = new Date();
-            const diff = eventDate - now;
+            const timeDiff = targetDate - now;
 
-            if (diff > 0) {
-                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-                document.getElementById("countdown").textContent = 
-                    `${days} days, ${hours} hours, ${minutes} minutes, ${seconds} seconds left`;
+            if (timeDiff <= 0) {
+                document.getElementById("countdown").innerHTML = "Expired";
             } else {
-                document.getElementById("countdown").textContent = "The event has started!";
+                const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+                document.getElementById("countdown").innerHTML = `${days}d ${hours}h ${minutes}m`;
+            }
+        }
+        setInterval(updateCountdown, 60000); // Update every minute
+        updateCountdown(); // Initial update
+
+        // Fetch Weather Data
+        async function getWeather() {
+            const url = 'https://api.met.no/weatherapi/locationforecast/2.0/classic?lat=45.9237&lon=6.8694'; // Correct coordinates for Chamonix
+            const headers = {
+                'User-Agent': 'WeatherForecastApp/1.0 (julie.ipsen924@goldfishgateway.com)', // Your email and app name
+                'Accept': 'application/json'
+            };
+
+            try {
+                const response = await fetch(url, { headers });
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+                displayWeather(data);
+            } catch (error) {
+                console.error("Error fetching weather data:", error);
+                document.getElementById("forecast-list").innerHTML = "Unable to retrieve weather data.";
             }
         }
 
-        setInterval(updateCountdown, 1000);
+        function displayWeather(data) {
+            const forecastList = document.getElementById("forecast-list");
+            forecastList.innerHTML = ""; // Clear previous content
+
+            const weatherData = data.properties.timeseries.slice(0, 7); // Display 7 days of forecast
+            weatherData.forEach(item => {
+                const time = new Date(item.time);
+                const day = time.toLocaleDateString('is-IS', { weekday: 'short', day: 'numeric', month: 'short' });
+                const temp = item.data.instant.details.air_temperature;
+                const symbol = item.data.next_12_hours.summary.symbol_code;
+
+                let weatherEmoji = "🌤️"; // Default sunny weather
+                if (symbol.includes("cloud")) weatherEmoji = "☁️";
+                if (symbol.includes("rain")) weatherEmoji = "🌧️";
+                if (symbol.includes("snow")) weatherEmoji = "❄️";
+
+                forecastList.innerHTML += `
+                    <div class="weather-item">
+                        <strong>${day}</strong> - ${temp}°C ${weatherEmoji}
+                    </div>
+                `;
+            });
+        }
+
+        getWeather(); // Call the function to fetch the weather data
     </script>
 </body>
 </html>
